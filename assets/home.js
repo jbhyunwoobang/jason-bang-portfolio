@@ -1,0 +1,22 @@
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const progress=document.getElementById('progressBar');
+const orb=document.getElementById('heroOrb');
+let frame=0;
+function onScroll(){if(frame)return;frame=requestAnimationFrame(()=>{frame=0;const max=document.documentElement.scrollHeight-window.innerHeight;const p=max>0?window.scrollY/max:0;progress.style.width=(p*100)+'%';const travel=Math.min(window.scrollY/window.innerHeight,1.15);if(orb&&!reduced){orb.style.setProperty('--orb-y',(-travel*95)+'px');orb.style.setProperty('--orb-scale',(1+travel*.42).toFixed(3));orb.style.opacity=Math.max(.18,1-travel*.6).toFixed(2)}})}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+if(!reduced&&'IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}},{threshold:.12,rootMargin:'0px 0px -6% 0px'});document.querySelectorAll('.reveal,.project').forEach(el=>observer.observe(el))}else{document.querySelectorAll('.reveal,.project').forEach(el=>el.classList.add('is-visible'))}
+
+// A site-wide 3D field: depth, pointer parallax, and scroll as a time axis.
+const canvas=document.getElementById('worldCanvas');
+const ctx=canvas&&canvas.getContext('2d');
+const pointer={x:0,y:0};
+let scrollPhase=0,canvasW=0,canvasH=0,spatialFrame=0;
+function sizeField(){if(!canvas||!ctx)return;const dpr=Math.min(devicePixelRatio||1,1.5);canvasW=innerWidth;canvasH=innerHeight;canvas.width=Math.round(canvasW*dpr);canvas.height=Math.round(canvasH*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+const stars=Array.from({length:240},(_,i)=>{const y=1-(i/239)*2,r=Math.sqrt(1-y*y),a=i*2.399963;return{x:Math.cos(a)*r,y,z:Math.sin(a)*r,phase:i*.17}});
+function drawField(now){if(!canvas||!ctx)return;const t=reduced?0:now*.00009+scrollPhase,rx=pointer.y*.24,ry=pointer.x*.38+t;ctx.clearRect(0,0,canvasW,canvasH);const cx=canvasW*.5,cy=canvasH*.5,scale=Math.min(canvasW,canvasH)*.43,projected=[];for(const p of stars){const wobble=reduced?1:1+Math.sin(t*2+p.phase)*.025;let x=p.x*wobble,y=p.y*wobble,z=p.z*wobble;const x1=x*Math.cos(ry)+z*Math.sin(ry),z1=-x*Math.sin(ry)+z*Math.cos(ry),y1=y*Math.cos(rx)-z1*Math.sin(rx),z2=y*Math.sin(rx)+z1*Math.cos(rx);const perspective=1.5/(2.4-z2*.62);projected.push({x:cx+x1*scale*perspective,y:cy+y1*scale*perspective,z:z2})}ctx.globalCompositeOperation='lighter';for(let i=0;i<projected.length;i++){const a=projected[i],alpha=.05+((a.z+1)/2)*.22;for(let j=i+1;j<Math.min(i+8,projected.length);j++){const b=projected[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;if(d<Math.pow(Math.min(canvasW,canvasH)*.105,2)){ctx.strokeStyle=`rgba(113,151,198,${alpha*(1-d/Math.pow(Math.min(canvasW,canvasH)*.105,2))})`;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}}if(i%2===0){ctx.fillStyle=`rgba(205,224,247,${alpha+.05})`;ctx.beginPath();ctx.arc(a.x,a.y,.7+((a.z+1)/2)*1.15,0,Math.PI*2);ctx.fill()}}ctx.globalCompositeOperation='source-over';if(!reduced)spatialFrame=requestAnimationFrame(drawField)}
+if(canvas&&ctx){sizeField();addEventListener('resize',sizeField,{passive:true});addEventListener('pointermove',e=>{pointer.x=(e.clientX/innerWidth-.5)*2;pointer.y=(e.clientY/innerHeight-.5)*2},{passive:true});spatialFrame=requestAnimationFrame(drawField)}
+function updateSpatialScroll(){scrollPhase=scrollY/innerHeight*1.25;document.querySelectorAll('.intro,.work,.about,.contact').forEach(section=>{const r=section.getBoundingClientRect(),delta=(r.top+r.height*.5-innerHeight*.5)/innerHeight,near=Math.max(0,1-Math.abs(delta));section.style.setProperty('--section-rx',(delta*1.5).toFixed(2)+'deg');section.style.setProperty('--section-z',(near*18).toFixed(1)+'px')})}
+addEventListener('scroll',updateSpatialScroll,{passive:true});updateSpatialScroll();
+// Project cards use native anchor behavior; no pointer-driven transforms.
+const cursorDot=document.querySelector('.cursor-dot');
+if(cursorDot&&matchMedia('(hover:hover) and (pointer:fine)').matches){document.documentElement.classList.add('has-dot-cursor');let cursorFrame=0,cursorX=0,cursorY=0;addEventListener('pointermove',e=>{cursorX=e.clientX;cursorY=e.clientY;if(cursorFrame)return;cursorFrame=requestAnimationFrame(()=>{cursorFrame=0;cursorDot.style.left=cursorX+'px';cursorDot.style.top=cursorY+'px';cursorDot.classList.add('is-visible')})},{passive:true});addEventListener('pointerleave',()=>cursorDot.classList.remove('is-visible'));}

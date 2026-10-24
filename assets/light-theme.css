@@ -9,6 +9,7 @@
   --blue:#111!important;
   --blue-bright:#111!important;
 }
+*,*::before,*::after{-webkit-user-select:none;user-select:none}
 html,body{background:#fff!important;color:#111!important}
 body{color-scheme:light}
 a{color:inherit}

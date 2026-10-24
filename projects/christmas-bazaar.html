@@ -1,7 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#171816">
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://jbhyunwoobang.github.io; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#171816">
 <title>Christmas Bazaar — Jason Bang</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -10,7 +12,8 @@
 <link rel="stylesheet" href="../assets/light-theme.css">
 </head>
 <body><div class="grain" aria-hidden="true"></div><header class="wrap"><nav class="nav"><a href="../index.html#work">← JASON BANG / WORK</a><a href="../index.html">HOME ↗</a></nav></header><main class="wrap"><section class="heading"><div><div class="label">Merchandise design</div><h1>Christmas Bazaar</h1></div><p>High school · Holiday collection</p></section><p class="description">Holiday merchandise designed for my high school Christmas Bazaar. Sold over 300 copies in total.</p><section class="images" aria-label="Christmas Bazaar merchandise design"><a href="../assets/christmas-bazaar/design-cover.jpg"><img src="../assets/christmas-bazaar/design-cover.jpg" alt="Christmas-themed high school bazaar merchandise illustrations"></a><a href="../assets/christmas-bazaar/bazaar-display.jpg"><img src="../assets/christmas-bazaar/bazaar-display.jpg" alt="Designed holiday products displayed at the Christmas Bazaar"></a></section></main><dialog id="bazaar-lightbox" aria-label="Full-size Christmas Bazaar image"><button type="button" aria-label="Close image">×</button><img alt=""></dialog><div class="cursor-dot" aria-hidden="true"></div>
-<script>const bazaarDialog=document.getElementById('bazaar-lightbox'),bazaarLarge=bazaarDialog.querySelector('img'),bazaarCursor=document.querySelector('.cursor-dot');document.querySelectorAll('.images a').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();const image=link.querySelector('img');bazaarLarge.src=image.src;bazaarLarge.alt=image.alt;bazaarDialog.showModal();if(bazaarCursor)bazaarDialog.append(bazaarCursor)}));bazaarDialog.querySelector('button').addEventListener('click',()=>bazaarDialog.close());bazaarDialog.addEventListener('click',event=>{if(event.target===bazaarDialog)bazaarDialog.close()});bazaarDialog.addEventListener('close',()=>{if(bazaarCursor)document.body.append(bazaarCursor)});</script>
-<script>const cursorDot=document.querySelector('.cursor-dot');if(cursorDot&&matchMedia('(hover:hover) and (pointer:fine)').matches){document.documentElement.classList.add('has-dot-cursor');let cursorFrame=0,cursorX=0,cursorY=0;addEventListener('pointermove',e=>{cursorX=e.clientX;cursorY=e.clientY;if(cursorFrame)return;cursorFrame=requestAnimationFrame(()=>{cursorFrame=0;cursorDot.style.left=cursorX+'px';cursorDot.style.top=cursorY+'px';cursorDot.classList.add('is-visible')})},{passive:true});addEventListener('pointerleave',()=>cursorDot.classList.remove('is-visible'))}</script>
+
+
+<script src="../assets/projects.js" defer></script>
 </body>
 </html>
